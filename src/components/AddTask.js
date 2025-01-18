@@ -3,10 +3,9 @@ import { useState } from 'react';
 import { db } from '@/firebase/config';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiAlertCircle, FiCheckCircle, FiClock, FiFlag } from 'react-icons/fi';
+import { FiAlertCircle, FiCheckCircle, FiClock, FiFlag, FiUsers } from 'react-icons/fi';
 
-const AddTask = () => {
-
+const AddTask = ({employees}) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [deadline, setDeadline] = useState('');
@@ -14,6 +13,7 @@ const AddTask = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [assignedto, setAssignedto] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,7 +119,7 @@ const AddTask = () => {
             className="relative"
           >
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              <FiClock className="inline mr-2" />
+              <FiClock className="inline mr-2 text-blue-500" />
               Deadline
             </label>
             <input
@@ -138,18 +138,59 @@ const AddTask = () => {
             className="relative"
           >
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              <FiFlag className="inline mr-2" />
+              <FiFlag className="inline mr-2 text-blue-500" />
               Priority
             </label>
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
-              className={`w-full px-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 ${getPriorityColor(priority)}`}
+              className={`w-full px-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200`}
             >
               <option value="low">Low Priority</option>
               <option value="medium">Medium Priority</option>
               <option value="high">High Priority</option>
             </select>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="relative"
+          >
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              <FiUsers className="inline mr-2 text-blue-500" />
+              Assign to
+            </label>
+            <div className="relative">
+              <select
+                value={assignedto}
+                onChange={(e) => setAssignedto(e.target.value)}
+                className="px-2 block w-full px-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none"
+                required
+              >
+                <option value="" disabled selected>Select an employee</option>
+                {employees && Object.keys(employees).map((employeeId) => (
+                  <option 
+                    key={employeeId} 
+                    value={employees[employeeId].name}
+                    className="py-2"
+                  >
+                    {employees[employeeId].name}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+            
+            {error && (
+              <p className="mt-1 text-sm text-red-600">
+                Please select an employee
+              </p>
+            )}
           </motion.div>
         </div>
 
