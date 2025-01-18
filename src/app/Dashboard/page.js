@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect, useCallback, memo } from 'react';
 import { getUser } from '@/utils/auth';
 import { db } from '@/firebase/config';
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, updateDoc, query, where } from 'firebase/firestore';
 import { FiRefreshCw, FiLogOut, FiCalendar, FiFlag, FiUsers, FiEdit2 } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -246,8 +246,13 @@ export default function Dashboard() {
   const fetchTasks = useCallback(async () => {
     setLoading(true);
     try {
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      const employeeId = currentUser.uid;
       const tasksRef = collection(db, 'tasks');
-      const querySnapshot = await getDocs(tasksRef);
+
+      const q = query(tasksRef, where('assignedTo', 'array-contains', employeeId));
+      
+      const querySnapshot = await getDocs(q);
       const fetchedTasks = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
