@@ -6,8 +6,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.NEXT_PUBLIC_EMAIL_USER,
-    pass: process.env.NEXT_PUBLIC_EMAIL_PASS
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
 });
 
@@ -58,4 +58,7 @@ export async function POST(request) {
       details: error.message
     }, { status: 500 });
   }
+}
+export async function OPTIONS(request) {
+  return NextResponse.json({}, { status: 200 });
 }
