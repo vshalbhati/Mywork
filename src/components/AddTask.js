@@ -54,7 +54,7 @@ const AddTask = ({employees}) => {
         priority
       };
 
-      const emailResponse = await fetch('/api/send-email', {
+      const emailResponse = await fetch('https://mytaskatwork.vercel.app/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
