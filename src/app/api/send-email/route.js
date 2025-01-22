@@ -13,7 +13,13 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(request) {
   try {
+    console.log('Starting email send process');
+    await transporter.verify();
+    console.log('Transporter verified successfully');
+
     const { emails, taskDetails } = await request.json();
+    console.log('Received request with emails:', emails.length);
+
     let failedEmails = [];
 
     const results = await Promise.all(emails.map(async (email) => {
@@ -25,6 +31,7 @@ export async function POST(request) {
           Deadline: ${taskDetails.deadline}
           Priority: ${taskDetails.priority}
         `;
+        console.log(`Attempting to send email to: ${email}`);
 
         let info = await transporter.sendMail({
           from: `"Task Management System" <${process.env.EMAIL_USER}>`,
@@ -33,7 +40,8 @@ export async function POST(request) {
           text: emailContent,
           html: `<div>${emailContent.replace(/\n/g, '<br>')}</div>`,
         });
-
+        
+        console.log(`Email sent successfully to ${email}`);
         return { email, status: 'sent', messageId: info.messageId };
       } catch (error) {
         failedEmails.push(email);
