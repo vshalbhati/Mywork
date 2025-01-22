@@ -11,9 +11,6 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
-
 export async function POST(request) {
   try {
     console.log('Starting email send process');
