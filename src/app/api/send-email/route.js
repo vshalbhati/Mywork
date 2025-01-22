@@ -11,6 +11,9 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function POST(request) {
   try {
     console.log('Starting email send process');
@@ -68,5 +71,12 @@ export async function POST(request) {
   }
 }
 export async function OPTIONS(request) {
-  return NextResponse.json({}, { status: 200 });
+  return NextResponse.json({}, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
 }
