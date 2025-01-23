@@ -5,8 +5,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/firebase/config';
+import { Button } from '@/components/ui/button';
 
-const LoginPage = () => {
+const LoginPage = ({ onCreateAccountClick }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -128,9 +129,12 @@ const LoginPage = () => {
             </div>
 
             <div className="mt-6 text-center">
-              <Link href="/Register" className="font-medium text-customGreen hover:text-blue-500">
+              {/* <Link href="/Register" className="font-medium text-customGreen hover:text-blue-500">
                 Create a new account
-              </Link>
+              </Link> */}
+              <Button onClick={onCreateAccountClick} className="font-medium text-customGreen hover:text-blue-500">
+                Create a new account
+              </Button>
             </div>
           </div>
         </div>
