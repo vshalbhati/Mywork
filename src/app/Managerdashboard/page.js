@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Tasks from '@/components/Tasks';
 import Employees from '@/components/Employees';
 import { db } from '@/firebase/config';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export default function Managerdashboard() {
   const router = useRouter();
@@ -32,9 +32,18 @@ export default function Managerdashboard() {
 
   const fetchEmployees = async () => {
     try {
+      const userData = getUser();
       const employeesRef = collection(db, 'users');
-      const querySnapshot = await getDocs(employeesRef);
+      const q = query(
+        employeesRef, 
+        where('position', '==', 'Employee'),
+        where('manager', '==', userData.name),
+        where('department', '==', userData.department)
+      );
+      
+      const querySnapshot = await getDocs(q);
       const employeeData = {};
+      
       querySnapshot.docs.forEach((doc) => {
         employeeData[doc.id] = doc.data();
       });

@@ -113,7 +113,7 @@ function Employees() {
                                 <div className="flex items-center justify-between text-sm text-gray-600">
                                     <span className="flex items-center">
                                         <FiFlag className="mr-2" />
-                                        Role: {employees[employeeId].role || 'Employee'}
+                                        Role: {employees[employeeId].position || 'Employee'}
                                     </span>
                                     <span className="flex items-center">
                                         <FiCalendar className="mr-2" />
